@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>決定！ - レシピレコメンド</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>決定しました！</h1>
+        <h2>今日のメニュー：{{ dish_name }}</h2>
+
+        <div class="ai-comment-box" style="background-color: #fdf5e6; border: 2px solid #deb887; padding: 20px; border-radius: 15px; margin: 20px 0;">
+            <h3>☆AIが解説☆</h3>
+            <p>{{ ai_description }}</p>
+        </div>
+
+        <a href="{{ url_for('pages.index') }}" class="btn">トップに戻る</a>
+    </div>
+</body>
+</html>

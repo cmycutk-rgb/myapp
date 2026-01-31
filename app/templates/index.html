@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>献立を提案してもらおう！</h1>
+
+    <form action="/" method="GET" style="margin-bottom: 30px; background: #f9f9f9; padding: 20px; border-radius: 10px; border: 1px solid #eee;">
+        <label>何月：</label>
+        <select name="month" style="padding: 5px;">
+            {% for m in range(1, 13) %}
+            <option value="{{ m }}" {% if month == m|string %}selected{% endif %}>{{ m }}月</option>
+            {% endfor %}
+        </select>
+
+        <label style="margin-left: 20px;">今の気分：</label>
+        <select name="mood" style="padding: 5px;">
+            <option value="和食" {% if mood == '和食' %}selected{% endif %}>和食</option>
+            <option value="洋食" {% if mood == '洋食' %}selected{% endif %}>洋食</option>
+            <option value="中華" {% if mood == '中華' %}selected{% endif %}>中華</option>
+            <option value="がっつり" {% if mood == 'がっつり' %}selected{% endif %}>がっつり</option>
+            <option value="あっさり" {% if mood == 'あっさり' %}selected{% endif %}>あっさり</option>
+            <option value="簡単" {% if mood == '簡単' %}selected{% endif %}>簡単・スピード</option>
+            <option value="魚" {% if mood == '魚' %}selected{% endif %}>魚料理</option>
+        </select>
+
+        <button type="submit" style="margin-left: 20px; padding: 8px 20px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">
+            提案してもらう
+        </button>
+    </form>
+
+    <hr>
+
+    {# 検索が実行された場合（searchedがTrue）に結果を表示 #}
+    {% if searched %}
+        {% if results %}
+            <h2>{{ month }}月の「{{ mood }}」におすすめ</h2>
+            <div class="recipe-list">
+                {% for dish in results %}
+                <div class="recipe-card" style="border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; border-radius: 8px; box-shadow: 2px 2px 5px rgba(0,0,0,0.05);">
+                    <h3 style="margin-top: 0;">{{ dish.name }}</h3>
+                    
+                    <p style="background-color: #f0f8ff; padding: 10px; border-left: 5px solid #007bff; border-radius: 4px;">
+                        <strong>AIのおすすめは...：</strong><br>
+                        {{ dish.ai_comment }}
+                    </p>
+
+                    <div style="margin-top: 15px;">
+                      <form action="{{ url_for('pages.select_dish') }}" method="POST">
+                       <input type="hidden" name="dish_id" value="{{ dish.id }}">
+                       <input type="hidden" name="dish_name" value="{{ dish.name }}">
+        
+                       <button type="submit" 
+                         style="background-color: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 1em;">
+                        これに決定！
+                       </button>
+                      </form>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p style="background-color: #fff3cd; padding: 15px; border-radius: 5px;">
+                ごめんなさい！{{ month }}月の「{{ mood }}」に合う料理をまだ覚えきれていないんだ。別の条件で試してほしい。
+            </p>
+        {% endif %}
+    {% else %}
+        {# ページを最初に開いた時だけ表示されるメッセージ #}
+        <div style="text-align: center; color: #666; margin-top: 50px; padding: 40px; border: 2px dashed #ccc; border-radius: 10px;">
+            <p style="font-size: 1.2em;">AIが旬の食材と今の気分に合わせた、料理を提案します！</p>
+            <p>上のメニューから条件を選んでボタンを押してください。</p>
+        </div>
+    {% endif %}
+{% endblock %}
