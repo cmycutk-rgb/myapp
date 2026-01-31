@@ -3,7 +3,7 @@ import os
 #AIzaSyBjWffPLYdGk_f1mqh5lOFFBgSTAASE1ag
 
 def generate_single_comment(dish_name, month, mood):
-    client = genai.Client(api_key="AIzaSyBjWffPLYdGk_f1mqh5lOFFBgSTAASE1ag".strip())
+    client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
     
     prompt = f"""
     あなたは料理の背景に詳しいコンシェルジュです。「{dish_name}」について詳しく教えてください。
